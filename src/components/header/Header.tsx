@@ -40,11 +40,11 @@ const Header = (props: propHeader) => {
             firstIndex = a + 1
             if (a === -1) break;
         }
-        console.log(dd);
+        // console.log(dd);
 
     }
-    console.log(dd);
-    console.log(d);
+    // console.log(dd);
+    // console.log(d);
     return (
         <StyledHeader {...props}>
             <Title color={props.colorTitle}>

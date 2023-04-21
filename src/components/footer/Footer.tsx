@@ -6,7 +6,7 @@ import Flex from "../Flex";
 import Button from "../Button";
 import {useAppDispatch, useAppSelector} from "../../redux/storeHook";
 import {calendarSelector} from "../../redux/Calendar/selectors";
-import {deleteMeeting} from "../../redux/Calendar/slice";
+import {deleteMeeting, findMeeting} from "../../redux/Calendar/slice";
 
 
 const StyledFooter = styled.div`
@@ -26,13 +26,14 @@ const Footer = (props: FooterProps) => {
     const onClickDelete = () => {
         if (window.confirm("Are you sure, you want to remove?")) {
             dispatch(deleteMeeting(currentMeeting))
+            dispatch(findMeeting(false))
         }
     }
 
     useEffect(()=>{
 
     },[])
-    console.log(viewMeeting);
+    // console.log(viewMeeting);
 
     return (
         <StyledFooter {...props}>

@@ -17,7 +17,6 @@ export const getWeek = ({firstWeekday, lastWeekday}: getWeekProps) => {
         // setWeek(prevState => ([...prevState, i]))
     }
 
-    // console.log(week);
 
     return week
 }
@@ -36,5 +35,6 @@ export const getMonthYear = ({firstWeekday}:getMonthYearprops) => {
     const month = firstWeekday.format('MMMM')
     const year = firstWeekday.format('YYYY')
     const today = Number(moment().format('DD'))
-    return {month, year, today}
+    const currentWeek = firstWeekday.week()
+    return {month, year, today, currentWeek}
 }

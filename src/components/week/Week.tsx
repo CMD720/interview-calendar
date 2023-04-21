@@ -6,6 +6,16 @@ import Title from "../Title";
 import moment, {Moment} from "moment/moment";
 import Flex from "../Flex";
 import Button from "../Button";
+import {
+    addMeetingsWeek,
+    clearActiveMeetings,
+    setActiveMeetings,
+    TMeetingsWeek,
+    updActiveMeeting
+} from "../../redux/Calendar/slice";
+import {useAppSelector} from "../../redux/storeHook";
+import {calendarSelector} from "../../redux/Calendar/selectors";
+import {useDispatch} from "react-redux";
 
 const StyledWeek = styled.div`
   display: grid;
@@ -55,48 +65,79 @@ const Block = styled.div`
   height: auto;
 `
 const Week = () => {
+    const dispatch = useDispatch()
+    const {activeMeetings, meetingsWeek} = useAppSelector(calendarSelector)
+    // console.log(meetingsWeek);
+
     const [week, setWeek] = useState<number[]>([])
     const [isMount, setIsMount] = useState(true)
     const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
     const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
-    const [selectedDate, setSelectedDate] = useState<number>()
     const days = getWeekDays()
-    const {month, year, today} = getMonthYear({firstWeekday})
+    const {month, year, today, currentWeek} = getMonthYear({firstWeekday})
+
+    const temp: TMeetingsWeek = {
+        year: year,
+        month: month,
+        weekNumber: currentWeek,
+        dataMeetings: activeMeetings,
+    }
+    console.log('temp',temp);
+
+    const onClickPreviousWeek = () => {
+        // const temp: TMeetingsWeek = {
+        //     year: year,
+        //     month: month,
+        //     weekNumber: currentWeek,
+        //     dataMeetings: activeMeetings,
+        // }
+        // console.log(activeMeetings.length);
+        if (activeMeetings.length !== 0) {
+            dispatch(addMeetingsWeek(temp))
+            dispatch(clearActiveMeetings())
+        }
+
+        setFirstWeekday(firstWeekday.startOf('isoWeek').subtract(1, 'week'))
+        setLastWeekday(lastWeekday.endOf('isoWeek').subtract(1, 'week'))
+        setWeek(getWeek({firstWeekday, lastWeekday}))
+
+    }
+    const onClickNextWeek = () => {
+        // const temp: TMeetingsWeek = {
+        //     year: year,
+        //     month: month,
+        //     weekNumber: currentWeek,
+        //     dataMeetings: activeMeetings,
+        // }
+        if (activeMeetings.length !== 0) {
+            dispatch(addMeetingsWeek(temp))
+            dispatch(clearActiveMeetings())
+        }
+
+        setFirstWeekday(firstWeekday.startOf('isoWeek').add(1, 'week'))
+        setLastWeekday(lastWeekday.endOf('isoWeek').add(1, 'week'))
+        setWeek(getWeek({firstWeekday, lastWeekday}))
+
+
+    }
+
+
+    const daysWeek = days.map((day, i) => <StyledSector key={i} fontSize={FontSize.sm}>{day}</StyledSector>)
+    const dateWeek = week.map((date, i) => <StyledSector key={i}>
+        <StyledSectorArea background={today === date ? '#ff3131' : ''} color={today === date ? 'white' : ''}>
+            {date}
+        </StyledSectorArea></StyledSector>)
+
 
     useEffect(() => {
         if (isMount) {
             setWeek(getWeek({firstWeekday, lastWeekday}))
         }
         setIsMount(false)
-    }, [])
-
-    // useEffect(() => {
-    //
-    // }, [week])
-    const onClickDate = (i: number) => {
-        setSelectedDate(i)
-    }
-
-
-    const onClickPreviousWeek = () => {
-        setFirstWeekday(firstWeekday.startOf('isoWeek').subtract(1, 'week'))
-        setLastWeekday(lastWeekday.endOf('isoWeek').subtract(1, 'week'))
-        setWeek(getWeek({firstWeekday, lastWeekday}))
-    }
-    const onClickNextWeek = () => {
-        setFirstWeekday(firstWeekday.startOf('isoWeek').add(1, 'week'))
-        setLastWeekday(lastWeekday.endOf('isoWeek').add(1, 'week'))
-        setWeek(getWeek({firstWeekday, lastWeekday}))
-    }
-    const daysWeek = days.map((day, i) => <StyledSector key={i} fontSize={FontSize.sm}>{day}</StyledSector>)
-    const dateWeek = week.map((date, i) => <StyledSector key={i}>
-        <StyledSectorArea
-            onClick={() => onClickDate(i)}
-            background={today === date ? '#ff3131' : ''}
-            color={today === date ? 'white' : ''}>
-            {date}
-        </StyledSectorArea></StyledSector>)
-
+    }, []);
+    useEffect(() => {
+        dispatch(updActiveMeeting(temp))
+    }, [currentWeek]);
 
     return (
         <StyledWeek>
@@ -112,8 +153,8 @@ const Week = () => {
                 <Flex justify={'space-around'}>
                     <Button minimal onClick={() => onClickPreviousWeek()}>
                         <svg
-                             xmlns="http://www.w3.org/2000/svg" fill="#ff3131" width="35px" height="35px"
-                             viewBox="0 0 24 24">
+                            xmlns="http://www.w3.org/2000/svg" fill="#ff3131" width="35px" height="35px"
+                            viewBox="0 0 24 24">
                             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
                         </svg>
                     </Button>
@@ -122,8 +163,8 @@ const Week = () => {
                     </Title>
                     <Button minimal onClick={() => onClickNextWeek()}>
                         <svg
-                             xmlns="http://www.w3.org/2000/svg" fill="#ff3131" width="35px" height="35px"
-                             viewBox="0 0 24 24">
+                            xmlns="http://www.w3.org/2000/svg" fill="#ff3131" width="35px" height="35px"
+                            viewBox="0 0 24 24">
                             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                         </svg>
                     </Button>

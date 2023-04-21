@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import './App.css';
 import styled from "styled-components";
 import {CalendarBody, Wrapper} from "./components/style";
 import Title from "./components/Title";

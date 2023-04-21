@@ -1,23 +1,24 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
-export interface TMeetingsWeek{
-    year: number,
-    month: number,
+export interface TMeetingsWeek {
+    year: string,
+    month: string,
     weekNumber: number,
-    dataMeetings:number[]
+    dataMeetings: number[]
 }
+
 export interface CalendarSliceState {
     viewMeeting: boolean,
     activeMeetings: number[],
     currentMeeting: number,
-    MeetingsWeek:TMeetingsWeek[],
+    meetingsWeek: TMeetingsWeek[],
 }
 
 const initialState: CalendarSliceState = {
     viewMeeting: false,
     activeMeetings: [],
     currentMeeting: 0,
-    MeetingsWeek:[],
+    meetingsWeek: [],
 }
 
 const calendarSlice = createSlice({
@@ -34,13 +35,45 @@ const calendarSlice = createSlice({
             state.currentMeeting = action.payload
         },
         deleteMeeting(state, action) {
-            console.log(typeof(action.payload));
+            console.log(typeof (action.payload));
             state.activeMeetings = state.activeMeetings.filter(item => item !== action.payload)
+        },
+        addMeetingsWeek(state, action) {
+            const findMeetWeek = state.meetingsWeek.find(item => {
+                return ((item.year === action.payload.year) &&
+                    // (item.month === action.payload.month) &&
+                    (item.weekNumber === action.payload.weekNumber))
+            });
+            console.log(findMeetWeek);
+            // findItem ? state.activeMeetings = findItem.dataMeetings : state.activeMeetings = [];
 
-            // activeMeetings.filter(item => item !== i))
-        }
+
+            findMeetWeek ? findMeetWeek.dataMeetings = action.payload.dataMeetings : state.meetingsWeek.push(action.payload);
+        },
+        clearActiveMeetings(state) {
+            state.activeMeetings = []
+        },
+        updActiveMeeting(state, action:PayloadAction<TMeetingsWeek>) {
+            const findMeetWeek = state.meetingsWeek.find(item => {
+                return ((item.year === action.payload.year) &&
+                    // (item.month === action.payload.month) &&
+                    (item.weekNumber === action.payload.weekNumber))
+            });
+            console.log(findMeetWeek);
+            if(findMeetWeek) {
+                state.activeMeetings = findMeetWeek.dataMeetings
+            }
+        },
     }
 })
 
 export default calendarSlice.reducer
-export const {findMeeting, setActiveMeetings, setCurrentMeeting, deleteMeeting} = calendarSlice.actions
+export const {
+    findMeeting,
+    setActiveMeetings,
+    setCurrentMeeting,
+    deleteMeeting,
+    addMeetingsWeek,
+    clearActiveMeetings,
+    updActiveMeeting
+} = calendarSlice.actions
