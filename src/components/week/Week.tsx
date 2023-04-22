@@ -43,6 +43,7 @@ const StyledSector = styled.div<SectorProps>`
 type StyledSectorAreaProps = {
     background?: string
 }
+//TODO StyledSectorArea расширить StyledSector
 const StyledSectorArea = styled.div<StyledSectorAreaProps>`
   display: flex;
   justify-content: center;
@@ -51,12 +52,12 @@ const StyledSectorArea = styled.div<StyledSectorAreaProps>`
   background: ${props => props.background || '#f6f6f6'};
   color: ${props => props.color || 'black'};
   border-radius: 50%;
-  cursor: pointer;
+  //cursor: pointer;
 
-  &:hover {
-    background: #fd8a8a;
-    color: white;
-  }
+  //&:hover {
+  //  background: #fd8a8a;
+  //  color: white;
+  //}
 `
 const Block = styled.div`
   grid-area: block;
@@ -66,12 +67,14 @@ const Block = styled.div`
 const Week = () => {
     const dispatch = useDispatch()
     const {activeMeetings, meetingsWeek} = useAppSelector(calendarSelector)
+
     const {firstWeekday, lastWeekday} = useAppSelector(momentSelector)
+    // const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
+    // const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
 
     const [week, setWeek] = useState<number[]>([])
     const [isMount, setIsMount] = useState(true)
-    // const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
-    // const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
+
     const days = getWeekDays()
     const {month, year, today, currentWeek, presentWeek} = getMonthYear({firstWeekday})
 
@@ -101,7 +104,6 @@ const Week = () => {
             lastWeekday:lastWeekday.endOf('isoWeek').subtract(1, 'week'),
         }
         dispatch(currentMoment(startEnd))
-
         dispatch(findMeeting(false))
         setWeek(getWeek({firstWeekday, lastWeekday}))
     }
@@ -113,19 +115,21 @@ const Week = () => {
         // setFirstWeekday(firstWeekday.startOf('isoWeek').add(1, 'week'))
         // setLastWeekday(lastWeekday.endOf('isoWeek').add(1, 'week'))
 
-        //работает но! ошибка в кансоли : non-serializable value was detected in the state, in the path: `moment.firstWeekday`. Value: M
+        //работает но! ошибка в консоли : non-serializable value was detected in the state, in the path: `moment.firstWeekday`. Value: M
         //пока не понятно...
         const startEnd = {
             firstWeekday:firstWeekday.startOf('isoWeek').add(1, 'week'),
             lastWeekday:lastWeekday.endOf('isoWeek').add(1, 'week'),
         }
         dispatch(currentMoment(startEnd))
-
         dispatch(findMeeting(false))
         setWeek(getWeek({firstWeekday, lastWeekday}))
     }
 
-
+    console.log('WEEK',week);
+    console.log('today',today);
+    console.log('presentWeek',presentWeek);
+    console.log('currentWeek',currentWeek);
     const daysWeek = days.map((day, i) => <StyledSector key={i} fontSize={FontSize.sm}>{day}</StyledSector>)
     const dateWeek = week.map((date, i) => <StyledSector key={i}>
         <StyledSectorArea
@@ -138,7 +142,6 @@ const Week = () => {
     useEffect(() => {
         if (isMount) {
             setWeek(getWeek({firstWeekday, lastWeekday}))
-            // setWeek(getWeek({firstWday, lastWday}))
         }
         setIsMount(false)
     }, []);

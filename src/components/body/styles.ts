@@ -18,8 +18,6 @@ export const TimeSector = styled.div`
   font-weight: 600;
   display: flex;
   justify-content: end;
-  //align-items: center;
-    //height: ${100 / 13}%;
   height: 50px;
   background: white;
 `
@@ -40,15 +38,12 @@ export const MeetSector = styled.div<MeetSectorProps>`
   border-right: 1px solid #e6e6e6;
   color: ${props => props.color || '#000000FF'};
   height: 50px;
-  //width: auto;
   width: ${100 / 7}%;
   ${props => props.primary && css`
-    //border-bottom: 1px solid #e6e6e6;
     border-right: 1px solid #e6e6e6;
   `}
   ${props => props.active && css`
-    //border-bottom: 1px solid #e6e6e6;
-    border-right: 1px solid #ff3131;
+    border: 1px solid #ff3131;
   `}
 
 `

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import {FontSize} from "./week/type";
 
 type TitleProps = {
-    // children: React.ReactElement
     children?: string |string[] | number | ReactElement| JSX.Element | JSX.Element[]
     color?:string;
     title?: FontSize;
@@ -12,7 +11,7 @@ type TitleProps = {
 const StyledTitle = styled.h1<PropsWithChildren>`
    font-size: ${props => props.title || '2em'};
   text-align: center;
-  color: ${props => props.color};
+  color: ${props => props.color || 'black'};
 `
 
 const Title = (props:TitleProps) => {

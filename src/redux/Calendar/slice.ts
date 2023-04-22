@@ -28,37 +28,38 @@ const calendarSlice = createSlice({
         findMeeting(state, action) {
             state.viewMeeting = action.payload
         },
+
         setActiveMeetings(state, action) {
             state.activeMeetings.push(action.payload)
         },
+
         setCurrentMeeting(state, action) {
             state.currentMeeting = action.payload
         },
+
         deleteMeeting(state, action) {
             console.log(typeof (action.payload));
             state.activeMeetings = state.activeMeetings.filter(item => item !== action.payload)
         },
+
         addMeetingsWeek(state, action) {
             const findMeetWeek = state.meetingsWeek.find(item => {
                 return ((item.year === action.payload.year) &&
                     (item.weekNumber === action.payload.weekNumber))
             });
-            console.log(findMeetWeek);
-            // findItem ? state.activeMeetings = findItem.dataMeetings : state.activeMeetings = [];
-
-
             findMeetWeek ? findMeetWeek.dataMeetings = action.payload.dataMeetings : state.meetingsWeek.push(action.payload);
         },
+
         clearActiveMeetings(state) {
             state.activeMeetings = []
         },
-        updActiveMeeting(state, action:PayloadAction<TMeetingsWeek>) {
+
+        updActiveMeeting(state, action: PayloadAction<TMeetingsWeek>) {
             const findMeetWeek = state.meetingsWeek.find(item => {
                 return ((item.year === action.payload.year) &&
                     (item.weekNumber === action.payload.weekNumber))
             });
-            console.log(findMeetWeek);
-            if(findMeetWeek) {
+            if (findMeetWeek) {
                 state.activeMeetings = findMeetWeek.dataMeetings
             }
         },
@@ -75,3 +76,4 @@ export const {
     clearActiveMeetings,
     updActiveMeeting
 } = calendarSlice.actions
+

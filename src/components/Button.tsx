@@ -2,9 +2,6 @@ import React, {ReactElement} from 'react';
 import styled, {css} from "styled-components";
 import {FontSize} from "./week/type";
 
-
-
-
 const Button = (props:StyledButtonProps) => {
     return (
         <StyledButton{...props}/>

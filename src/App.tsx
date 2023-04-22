@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
-import {CalendarBody, Wrapper} from "./components/style";
+import {CalendarBody, Wrapper} from "./components/styles";
 import Title from "./components/Title";
 import Header from "./components/header/Header";
 import Week from "./components/week/Week";
@@ -32,7 +32,8 @@ function App() {
         <Wrapper>
             {/*<button onClick={()=>changeColor()}>CLICK</button>*/}
             <CalendarBody>
-                <Header background={background} colorTitle={colorTitle} fillSvg={fillSvg}/>
+                {/*<Header background={background} colorTitle={colorTitle} fillSvg={fillSvg}/>*/}
+                <Header/>
                 <Week/>
                 <Body/>
                 <Footer/>

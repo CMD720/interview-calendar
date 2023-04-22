@@ -1,15 +1,20 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import styled from "styled-components";
-import Title from "../Title";
-import {FontSize} from "../week/type";
 import Flex from "../Flex";
 import Button from "../Button";
 import {useAppDispatch, useAppSelector} from "../../redux/storeHook";
 import {calendarSelector} from "../../redux/Calendar/selectors";
-import {deleteMeeting, findMeeting} from "../../redux/Calendar/slice";
+import {
+    addMeetingsWeek,
+    clearActiveMeetings,
+    deleteMeeting,
+    findMeeting,
+    TMeetingsWeek
+} from "../../redux/Calendar/slice";
 import {momentSelector} from "../../redux/Moment/selectors";
 import {currentMoment} from "../../redux/Moment/slice";
 import moment from "moment/moment";
+import {getMonthYear} from "../week/GetWeek";
 
 
 const StyledFooter = styled.div`
@@ -22,8 +27,17 @@ const StyledFooter = styled.div`
 type FooterProps = {}
 const Footer = (props: FooterProps) => {
     const dispatch = useAppDispatch()
-    const {viewMeeting,currentMeeting} = useAppSelector(calendarSelector)
-    const {firstWeekday, lastWeekday} = useAppSelector(momentSelector)
+    const {viewMeeting, currentMeeting} = useAppSelector(calendarSelector)
+    const {activeMeetings} = useAppSelector(calendarSelector)
+    const {firstWeekday} = useAppSelector(momentSelector)
+    const {month, year, currentWeek} = getMonthYear({firstWeekday})
+
+    const temp: TMeetingsWeek = {
+        year: year,
+        month: month,
+        weekNumber: currentWeek,
+        dataMeetings: activeMeetings,
+    }
 
     const display = viewMeeting ? 'block' : 'none'
 
@@ -33,33 +47,28 @@ const Footer = (props: FooterProps) => {
             dispatch(findMeeting(false))
         }
     }
-    const onClickToday =() => {
-
+    const onClickToday = () => {
 
         const startEnd = {
-            firstWeekday:moment().startOf('isoWeek'),
-            lastWeekday:moment().endOf('isoWeek'),
+            firstWeekday: moment().startOf('isoWeek'),
+            lastWeekday: moment().endOf('isoWeek'),
         }
+        dispatch(addMeetingsWeek(temp))
         dispatch(currentMoment(startEnd))
         dispatch(findMeeting(false))
+        dispatch(clearActiveMeetings())
     }
-    // useEffect(()=>{
-    //
-    // },[])
-    // console.log(viewMeeting);
-
     return (
         <StyledFooter {...props}>
             <Flex justify={'space-between'}>
-                <Button onClick={()=>onClickToday()} minimal>
+                <Button onClick={() => onClickToday()} minimal>
                     Today
                 </Button>
-                <Button onClick={()=>onClickDelete()} minimal display={display}>
+                <Button onClick={() => onClickDelete()} minimal display={display}>
                     Delete
                 </Button>
             </Flex>
         </StyledFooter>
     );
 };
-
 export default Footer;

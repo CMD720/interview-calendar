@@ -1,24 +1,18 @@
 import moment, {Moment} from "moment/moment";
-import {useState} from "react";
-
 
 type getWeekProps = {
     firstWeekday: any;
     lastWeekday: any;
 }
-// const [week, setWeek] = useState<number[]>([])
-// export const getWeek = () => {
 export const getWeek = ({firstWeekday, lastWeekday}: getWeekProps) => {
-
+//TODO некорректно работает стык месяца на неделе первый день больше последнего
+//количество дней в месяце
     const week = []
     const firstWeekDay = firstWeekday.date();
     const lastWeekDay = lastWeekday.date();
     for (let i = firstWeekDay; i <= lastWeekDay; i++) {
         week.push(i)
-        // setWeek(prevState => ([...prevState, i]))
     }
-
-
     return week
 }
 
@@ -39,11 +33,4 @@ export const getMonthYear = ({firstWeekday}:getMonthYearprops) => {
     const currentWeek = firstWeekday.week()
     const presentWeek = moment().week()
     return {month, year, today, currentWeek, presentWeek}
-}
-
-export const getMoment = (firstDay:Moment , lastDay:Moment) => {
-    // const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
-    // const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
-
-
 }

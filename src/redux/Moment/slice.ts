@@ -17,7 +17,7 @@ const momentSlice = createSlice({
     initialState,
     reducers: {
         currentMoment(state,action){
-            console.log('XT')
+            // console.log('XB')
             state.firstWeekday = action.payload.firstWeekday;
             state.lastWeekday = action.payload.lastWeekday;
         },

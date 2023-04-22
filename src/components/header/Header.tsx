@@ -7,9 +7,20 @@ import {getMonthYear, getWeek, getWeekDays} from "../week/GetWeek";
 import {useAppDispatch, useAppSelector} from "../../redux/storeHook";
 import {momentSelector} from "../../redux/Moment/selectors";
 import {calendarSelector} from "../../redux/Calendar/selectors";
-import {setActiveMeetings} from "../../redux/Calendar/slice";
+import {
+    addMeetingsWeek,
+    clearActiveMeetings,
+    findMeeting,
+    setActiveMeetings,
+    TMeetingsWeek
+} from "../../redux/Calendar/slice";
+import {currentMoment} from "../../redux/Moment/slice";
 
-
+type propHeader = {
+    colorTitle?: string
+    fillSvg?: string
+    background?: string
+}
 const StyledHeader = styled.div<propHeader>`
   display: flex;
   align-items: center;
@@ -19,38 +30,24 @@ const StyledHeader = styled.div<propHeader>`
 `
 
 
-type propHeader = {
-    colorTitle?: string
-    fillSvg?: string
-    background?: string
-}
+
 const Header = (props: propHeader) => {
     const dispatch = useAppDispatch()
     const {firstWeekday, lastWeekday} = useAppSelector(momentSelector)
     const {activeMeetings, meetingsWeek} = useAppSelector(calendarSelector)
+    const {month, year, today, currentWeek, presentWeek} = getMonthYear({firstWeekday})
 
-    const [d, setD] = useState('')
-    const [dd, setDD] = useState<number[]>([])
-    const days = getWeekDays()
+    const temp: TMeetingsWeek = {
+        year: year,
+        month: month,
+        weekNumber: currentWeek,
+        dataMeetings: activeMeetings,
+    }
+    const [meetingDate, setMeetingDate] = useState<number[]>([])
     const week = getWeek({firstWeekday, lastWeekday})
-    const isMout = useRef(false)
-    // const times = {
-    //     8: [1, 2, 3, 4, 5, 6, 7],
-    //     9: [8, 9, 10, 11, 12, 13, 14],
-    //     10: [15, 16, 17, 18, 19, 20, 21],
-    //     11: [22, 23, 24, 25, 26, 27, 28],
-    //     12: [29, 30, 31, 32, 33, 34, 35],
-    //     13: [36, 37, 38, 39, 40, 41, 42],
-    //     14: [43, 44, 45, 46, 47, 48, 49],
-    //     15: [50, 51, 52, 53, 54, 55, 56],
-    //     16: [57, 58, 59, 60, 61, 62, 63],
-    //     17: [64, 65, 66, 67, 68, 69, 70],
-    //     18: [71, 72, 73, 74, 75, 76, 77],
-    //     19: [78, 79, 80, 81, 82, 83, 84],
-    //     20: [85, 86, 87, 88, 89, 90, 91],
-    // }
-    const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    const isMount = useRef(false)
 
+    const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     const times = [
         [1, 2, 3, 4, 5, 6, 7],
         [8, 9, 10, 11, 12, 13, 14],
@@ -65,65 +62,69 @@ const Header = (props: propHeader) => {
         [71, 72, 73, 74, 75, 76, 77],
         [78, 79, 80, 81, 82, 83, 84],
         [85, 86, 87, 88, 89, 90, 91]]
-    // console.log(times);
-
-    ////////////////
-    // const firstWeekday = moment().startOf('isoWeek')
-    // const lastWeekday = moment().endOf('isoWeek')
-    // const {month, year, today, currentWeek} = getMonthYear({firstWeekday})
-    // const day = getWeek({firstWeekday, lastWeekday})
-    // const index = day.findIndex(i => i === today) + 1
-    // console.log(today);
-    // console.log(day);
-    // console.log(index);
-    ///////////////
 
     const addMeeting = () => {
-        // const date = prompt('Enter event time: YYYY-MM-DD  HH-mm-ss');
-        // if (date !== null) {
-        //     setD(date)
-        // }
-        const str = '2023-04-22-10-22';
+        const str = prompt('Enter event time: YYYY-MM-DD-HH-mm  for example: 2023-06-23-12-34 ');
+
+        // const str = '2023-06-23-12-34';
         const target = '-'
         let firstIndex = 0
         let lastIndex = 0
-        while (true) {
-            const a = str.indexOf(target, firstIndex)
-            a !== -1 ? lastIndex = a : lastIndex = str.length
-            const num = Number(str.slice(firstIndex, lastIndex))
-            setDD(prevState => ([...prevState, num]))
-            firstIndex = a + 1
-            if (a === -1) break;
+        if(str){
+            while (true) {
+                const a = str.indexOf(target, firstIndex)
+                a !== -1 ? lastIndex = a : lastIndex = str.length
+                const num = Number(str.slice(firstIndex, lastIndex))
+                setMeetingDate(prevState => ([...prevState, num]))
+                firstIndex = a + 1
+                if (a === -1) break;
+            }
+
+            const setMoment = str.slice(0, 10)
+            const startEnd = {
+                firstWeekday:moment(setMoment).startOf('isoWeek'),
+                lastWeekday:moment(setMoment).endOf('isoWeek'),
+            }
+            dispatch(addMeetingsWeek(temp))
+            dispatch(currentMoment(startEnd))
+            dispatch(findMeeting(false))
+            dispatch(clearActiveMeetings())
         }
+
+        // const setMoment = '2023-06-23'
+
+        // if (str){
+        //     const setMoment = str.slice(0, 10)
+        //     const startEnd = {
+        //         firstWeekday:moment(setMoment).startOf('isoWeek'),
+        //         lastWeekday:moment(setMoment).endOf('isoWeek'),
+        //     }
+        //     dispatch(addMeetingsWeek(temp))
+        //     dispatch(currentMoment(startEnd))
+        //     dispatch(findMeeting(false))
+        //     dispatch(clearActiveMeetings())
+        // }
     }
 
-    const getActiveMeet = (ddd: number[]) => {
-
-        const index1 = hours.indexOf(ddd[3]);
-        const index2 = week.indexOf(ddd[2]);
-        // const index2 = time.indexOf(dd[2])
-        console.log(hours);
-        console.log('times', times[index1]);
-        console.log('index', index1, 'item', hours[index1]);
-        console.log('index', index2, 'item', times[index1][index2]);
-        // console.log('index',index2 , 'item',times[index1][index2])
-        console.log(ddd);
+    const getActiveMeet = () => {
+        const index1 = hours.indexOf(meetingDate[3]);
+        const index2 = week.indexOf(meetingDate[2]);
         dispatch(setActiveMeetings(times[index1][index2]))
     }
 
     useEffect(() => {
-        if (isMout.current) {
-            getActiveMeet(dd);
+        if (isMount.current) {
+            getActiveMeet();
         }
-        isMout.current = true
-    }, [dd])
+        isMount.current = true
+    }, [meetingDate])
 
     return (
         <StyledHeader {...props}>
             <Title color={props.colorTitle}>
                 Interview Calendar
             </Title>
-            <svg style={{cursor: 'pointer'}} onClick={addMeeting} fill={props.fillSvg} width="30px" height="30px"
+            <svg style={{cursor: 'pointer'}} onClick={addMeeting} fill='#ff3131' width="30px" height="30px"
                  viewBox="0 0 1920 1920"
                  xmlns="http://www.w3.org/2000/svg">
                 <path
