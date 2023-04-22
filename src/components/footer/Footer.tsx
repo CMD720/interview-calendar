@@ -7,6 +7,9 @@ import Button from "../Button";
 import {useAppDispatch, useAppSelector} from "../../redux/storeHook";
 import {calendarSelector} from "../../redux/Calendar/selectors";
 import {deleteMeeting, findMeeting} from "../../redux/Calendar/slice";
+import {momentSelector} from "../../redux/Moment/selectors";
+import {currentMoment} from "../../redux/Moment/slice";
+import moment from "moment/moment";
 
 
 const StyledFooter = styled.div`
@@ -20,6 +23,7 @@ type FooterProps = {}
 const Footer = (props: FooterProps) => {
     const dispatch = useAppDispatch()
     const {viewMeeting,currentMeeting} = useAppSelector(calendarSelector)
+    const {firstWeekday, lastWeekday} = useAppSelector(momentSelector)
 
     const display = viewMeeting ? 'block' : 'none'
 
@@ -29,16 +33,25 @@ const Footer = (props: FooterProps) => {
             dispatch(findMeeting(false))
         }
     }
+    const onClickToday =() => {
 
-    useEffect(()=>{
 
-    },[])
+        const startEnd = {
+            firstWeekday:moment().startOf('isoWeek'),
+            lastWeekday:moment().endOf('isoWeek'),
+        }
+        dispatch(currentMoment(startEnd))
+        dispatch(findMeeting(false))
+    }
+    // useEffect(()=>{
+    //
+    // },[])
     // console.log(viewMeeting);
 
     return (
         <StyledFooter {...props}>
             <Flex justify={'space-between'}>
-                <Button minimal>
+                <Button onClick={()=>onClickToday()} minimal>
                     Today
                 </Button>
                 <Button onClick={()=>onClickDelete()} minimal display={display}>

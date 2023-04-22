@@ -41,7 +41,6 @@ const calendarSlice = createSlice({
         addMeetingsWeek(state, action) {
             const findMeetWeek = state.meetingsWeek.find(item => {
                 return ((item.year === action.payload.year) &&
-                    // (item.month === action.payload.month) &&
                     (item.weekNumber === action.payload.weekNumber))
             });
             console.log(findMeetWeek);
@@ -56,7 +55,6 @@ const calendarSlice = createSlice({
         updActiveMeeting(state, action:PayloadAction<TMeetingsWeek>) {
             const findMeetWeek = state.meetingsWeek.find(item => {
                 return ((item.year === action.payload.year) &&
-                    // (item.month === action.payload.month) &&
                     (item.weekNumber === action.payload.weekNumber))
             });
             console.log(findMeetWeek);

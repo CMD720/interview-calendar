@@ -9,8 +9,6 @@ import {useSelector} from "react-redux";
 import {calendarSelector} from "../../redux/Calendar/selectors";
 
 
-
-
 const Body = () => {
     const dispatch = useAppDispatch()
     const {activeMeetings, meetingsWeek} = useAppSelector(calendarSelector)
@@ -19,15 +17,10 @@ const Body = () => {
     const lastWeekday = moment().endOf('isoWeek')
     const {month, year, today, currentWeek} = getMonthYear({firstWeekday})
     const days = getWeek({firstWeekday, lastWeekday})
-    const index = days.findIndex(i => i===today) + 1
+    const index = days.findIndex(i => i === today) + 1
     // console.log(today);
     // console.log(days);
     // console.log(index);
-    ///////////////
-    // const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
-    // const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
-    // const days = getWeekDays()
-    // const {month, year, today} = getMonthYear({firstWeekday})
     ///////////////
 
     const times = ['09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00']
@@ -35,9 +28,21 @@ const Body = () => {
     const timesMeeting = times.map((time, index) => <TimeSector key={index}>{time}</TimeSector>)
 
 
-    const onClickMeetSector = (i: number) => {
+    const onClickMeetSector = (i: number, event: React.MouseEvent<HTMLDivElement>) => {
         const findItem = activeMeetings.find((item, index) => item === i)
-        // console.log(findItem);
+        if (findItem) {
+            dispatch(setCurrentMeeting(i))
+            dispatch(findMeeting(true))
+        } else {
+            dispatch(findMeeting(false))
+            if (event.ctrlKey) {
+                dispatch(setActiveMeetings(i))
+                dispatch(findMeeting(false))
+            }
+        }
+    }
+    const onDblClickMeetSector = (i: number) => {
+        const findItem = activeMeetings.find((item, index) => item === i)
         if (findItem) {
             dispatch(setCurrentMeeting(i))
             dispatch(findMeeting(true))
@@ -49,12 +54,13 @@ const Body = () => {
 
     for (let i = 1; i <= 91; i++) {
         meeting.push(<MeetSector key={i}>
-                        <MeetSectorArea
-                            onClick={() => onClickMeetSector(i)}
-                            background={activeMeetings.find((item) => item === i) ? '#ebecff' : 'white'}>
-                            {i}
-                        </MeetSectorArea>
-                    </MeetSector>)
+            <MeetSectorArea
+                onDoubleClick={() => onDblClickMeetSector(i)}
+                onClick={(event) => onClickMeetSector(i, event)}
+                background={activeMeetings.find((item) => item === i) ? '#ebecff' : 'white'}>
+                {i}
+            </MeetSectorArea>
+        </MeetSector>)
     }
 
 

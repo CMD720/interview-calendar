@@ -9,13 +9,15 @@ import Button from "../Button";
 import {
     addMeetingsWeek,
     clearActiveMeetings,
-    setActiveMeetings,
+    findMeeting,
     TMeetingsWeek,
     updActiveMeeting
 } from "../../redux/Calendar/slice";
 import {useAppSelector} from "../../redux/storeHook";
 import {calendarSelector} from "../../redux/Calendar/selectors";
 import {useDispatch} from "react-redux";
+import {momentSelector} from "../../redux/Moment/selectors";
+import {currentMoment} from "../../redux/Moment/slice";
 
 const StyledWeek = styled.div`
   display: grid;
@@ -44,11 +46,8 @@ type StyledSectorAreaProps = {
 const StyledSectorArea = styled.div<StyledSectorAreaProps>`
   display: flex;
   justify-content: center;
-  //justify-self: center;
   width: 40px;
   height: 40px;
-  //background: red;
-  //background: #f6f6f6;
   background: ${props => props.background || '#f6f6f6'};
   color: ${props => props.color || 'black'};
   border-radius: 50%;
@@ -67,14 +66,17 @@ const Block = styled.div`
 const Week = () => {
     const dispatch = useDispatch()
     const {activeMeetings, meetingsWeek} = useAppSelector(calendarSelector)
-    // console.log(meetingsWeek);
+    const {firstWeekday, lastWeekday} = useAppSelector(momentSelector)
 
     const [week, setWeek] = useState<number[]>([])
     const [isMount, setIsMount] = useState(true)
-    const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
-    const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
+    // const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
+    // const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
     const days = getWeekDays()
-    const {month, year, today, currentWeek} = getMonthYear({firstWeekday})
+    const {month, year, today, currentWeek, presentWeek} = getMonthYear({firstWeekday})
+
+    // console.log('firstWeekday',firstWeekday);
+    // console.log('lastWeekday',lastWeekday);
 
     const temp: TMeetingsWeek = {
         year: year,
@@ -82,49 +84,53 @@ const Week = () => {
         weekNumber: currentWeek,
         dataMeetings: activeMeetings,
     }
-    console.log('temp',temp);
+    // console.log('temp',temp);
 
     const onClickPreviousWeek = () => {
-        // const temp: TMeetingsWeek = {
-        //     year: year,
-        //     month: month,
-        //     weekNumber: currentWeek,
-        //     dataMeetings: activeMeetings,
-        // }
-        // console.log(activeMeetings.length);
         if (activeMeetings.length !== 0) {
             dispatch(addMeetingsWeek(temp))
             dispatch(clearActiveMeetings())
         }
+        // setFirstWeekday(firstWeekday.startOf('isoWeek').subtract(1, 'week'))
+        // setLastWeekday(lastWeekday.endOf('isoWeek').subtract(1, 'week'))
 
-        setFirstWeekday(firstWeekday.startOf('isoWeek').subtract(1, 'week'))
-        setLastWeekday(lastWeekday.endOf('isoWeek').subtract(1, 'week'))
+        //работает но! ошибка в кансоли : non-serializable value was detected in the state, in the path: `moment.firstWeekday`. Value: M
+        //пока не понятно...
+        const startEnd = {
+            firstWeekday:firstWeekday.startOf('isoWeek').subtract(1, 'week'),
+            lastWeekday:lastWeekday.endOf('isoWeek').subtract(1, 'week'),
+        }
+        dispatch(currentMoment(startEnd))
+
+        dispatch(findMeeting(false))
         setWeek(getWeek({firstWeekday, lastWeekday}))
-
     }
     const onClickNextWeek = () => {
-        // const temp: TMeetingsWeek = {
-        //     year: year,
-        //     month: month,
-        //     weekNumber: currentWeek,
-        //     dataMeetings: activeMeetings,
-        // }
         if (activeMeetings.length !== 0) {
             dispatch(addMeetingsWeek(temp))
             dispatch(clearActiveMeetings())
         }
+        // setFirstWeekday(firstWeekday.startOf('isoWeek').add(1, 'week'))
+        // setLastWeekday(lastWeekday.endOf('isoWeek').add(1, 'week'))
 
-        setFirstWeekday(firstWeekday.startOf('isoWeek').add(1, 'week'))
-        setLastWeekday(lastWeekday.endOf('isoWeek').add(1, 'week'))
+        //работает но! ошибка в кансоли : non-serializable value was detected in the state, in the path: `moment.firstWeekday`. Value: M
+        //пока не понятно...
+        const startEnd = {
+            firstWeekday:firstWeekday.startOf('isoWeek').add(1, 'week'),
+            lastWeekday:lastWeekday.endOf('isoWeek').add(1, 'week'),
+        }
+        dispatch(currentMoment(startEnd))
+
+        dispatch(findMeeting(false))
         setWeek(getWeek({firstWeekday, lastWeekday}))
-
-
     }
 
 
     const daysWeek = days.map((day, i) => <StyledSector key={i} fontSize={FontSize.sm}>{day}</StyledSector>)
     const dateWeek = week.map((date, i) => <StyledSector key={i}>
-        <StyledSectorArea background={today === date ? '#ff3131' : ''} color={today === date ? 'white' : ''}>
+        <StyledSectorArea
+            background={today === date && presentWeek === currentWeek ? '#ff3131' : ''}
+            color={today === date && presentWeek === currentWeek ? 'white' : ''}>
             {date}
         </StyledSectorArea></StyledSector>)
 
@@ -132,17 +138,17 @@ const Week = () => {
     useEffect(() => {
         if (isMount) {
             setWeek(getWeek({firstWeekday, lastWeekday}))
+            // setWeek(getWeek({firstWday, lastWday}))
         }
         setIsMount(false)
     }, []);
     useEffect(() => {
         dispatch(updActiveMeeting(temp))
-    }, [currentWeek]);
+        setWeek(getWeek({firstWeekday, lastWeekday}))
+    }, [currentWeek , firstWeekday]);
 
     return (
         <StyledWeek>
-            {/*<Sidebar>*/}
-            {/*</Sidebar>*/}
             <Block>
                 <Flex>
                     {daysWeek}

@@ -1,8 +1,10 @@
 import {combineReducers, configureStore} from "@reduxjs/toolkit";
 import calendarSlice from './Calendar/slice'
+import momentSlice from './Moment/slice'
 
 const rootReducer = combineReducers({
     calendar: calendarSlice,
+    moment: momentSlice,
 })
 
 export const setupStore = () => {

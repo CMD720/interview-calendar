@@ -1,4 +1,5 @@
 import moment, {Moment} from "moment/moment";
+import {useState} from "react";
 
 
 type getWeekProps = {
@@ -36,5 +37,13 @@ export const getMonthYear = ({firstWeekday}:getMonthYearprops) => {
     const year = firstWeekday.format('YYYY')
     const today = Number(moment().format('DD'))
     const currentWeek = firstWeekday.week()
-    return {month, year, today, currentWeek}
+    const presentWeek = moment().week()
+    return {month, year, today, currentWeek, presentWeek}
+}
+
+export const getMoment = (firstDay:Moment , lastDay:Moment) => {
+    // const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
+    // const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
+
+
 }
