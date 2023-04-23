@@ -126,10 +126,10 @@ const Week = () => {
         setWeek(getWeek({firstWeekday, lastWeekday}))
     }
 
-    console.log('WEEK',week);
-    console.log('today',today);
-    console.log('presentWeek',presentWeek);
-    console.log('currentWeek',currentWeek);
+    // console.log('WEEK',week);
+    // console.log('today',today);
+    // console.log('presentWeek',presentWeek);
+    // console.log('currentWeek',currentWeek);
     const daysWeek = days.map((day, i) => <StyledSector key={i} fontSize={FontSize.sm}>{day}</StyledSector>)
     const dateWeek = week.map((date, i) => <StyledSector key={i}>
         <StyledSectorArea

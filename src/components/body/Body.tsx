@@ -45,7 +45,7 @@ const Body = () => {
                 onDoubleClick={() => onDblClickMeetSector(i)}
                 onClick={(event) => onClickMeetSector(i, event)}
                 background={activeMeetings.find((item) => item === i) ? '#ebecff' : 'white'}>
-                {/*{i}*/}
+                {i}
             </MeetSectorArea>
         </MeetSector>)
     }

@@ -31,6 +31,8 @@ export const getMonthYear = ({firstWeekday}:getMonthYearprops) => {
     const year = firstWeekday.format('YYYY')
     const today = Number(moment().format('DD'))
     const currentWeek = firstWeekday.week()
-    const presentWeek = moment().week()
+    // const presentWeek = moment().locale('ru').week()
+    const presentWeek = moment().isoWeek()
+    // console.log(presentWeek);
     return {month, year, today, currentWeek, presentWeek}
 }

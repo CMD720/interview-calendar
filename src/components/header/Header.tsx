@@ -30,7 +30,6 @@ const StyledHeader = styled.div<propHeader>`
 `
 
 
-
 const Header = (props: propHeader) => {
     const dispatch = useAppDispatch()
     const {firstWeekday, lastWeekday} = useAppSelector(momentSelector)
@@ -43,9 +42,13 @@ const Header = (props: propHeader) => {
         weekNumber: currentWeek,
         dataMeetings: activeMeetings,
     }
-    const [meetingDate, setMeetingDate] = useState<number[]>([])
+    // const [meetingDate, setMeetingDate] = useState<number[]>([])
     const week = getWeek({firstWeekday, lastWeekday})
+    // const [week, setWeek] = useState<number[]>(getWeek({firstWeekday, lastWeekday}))
     const isMount = useRef(false)
+    const [sectorNumber, setSectorNumber] = useState<number>(0)
+    const [readingDate, setReadingDate] = useState('')
+    const [meetingData ,setMeetingData] = useState<number[]>([])
 
     const hours = [8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
     const times = [
@@ -64,60 +67,74 @@ const Header = (props: propHeader) => {
         [85, 86, 87, 88, 89, 90, 91]]
 
     const addMeeting = () => {
-        const str = prompt('Enter event time: YYYY-MM-DD-HH-mm  for example: 2023-06-23-12-34 ');
+        const readingMeet = prompt('Enter event time: YYYY-MM-DD-HH-mm  for example: 2023-06-23-12-34  2023-04-27-10-34 ');
+        // const readingMeet = '2023-06-20-10-34';
 
-        // const str = '2023-06-23-12-34';
         const target = '-'
         let firstIndex = 0
         let lastIndex = 0
-        if(str){
+        const createMeetingData:number[] = []
+
+        if (readingMeet) {
             while (true) {
-                const a = str.indexOf(target, firstIndex)
-                a !== -1 ? lastIndex = a : lastIndex = str.length
-                const num = Number(str.slice(firstIndex, lastIndex))
-                setMeetingDate(prevState => ([...prevState, num]))
+                const a = readingMeet.indexOf(target, firstIndex)
+                a !== -1 ? lastIndex = a : lastIndex = readingMeet.length
+                const num = Number(readingMeet.slice(firstIndex, lastIndex))
+                createMeetingData.push(num)
                 firstIndex = a + 1
                 if (a === -1) break;
             }
-
-            const setMoment = str.slice(0, 10)
-            const startEnd = {
-                firstWeekday:moment(setMoment).startOf('isoWeek'),
-                lastWeekday:moment(setMoment).endOf('isoWeek'),
-            }
-            dispatch(addMeetingsWeek(temp))
-            dispatch(currentMoment(startEnd))
-            dispatch(findMeeting(false))
-            dispatch(clearActiveMeetings())
+            const index1 = hours.indexOf(createMeetingData[3]);
+            const index2 = week.indexOf(createMeetingData[2]);
+            setSectorNumber(times[index1][index2])
+            setMeetingData(createMeetingData);
+            setReadingDate(readingMeet.slice(0, 10))
         }
-
-        // const setMoment = '2023-06-23'
-
-        // if (str){
-        //     const setMoment = str.slice(0, 10)
-        //     const startEnd = {
-        //         firstWeekday:moment(setMoment).startOf('isoWeek'),
-        //         lastWeekday:moment(setMoment).endOf('isoWeek'),
-        //     }
-        //     dispatch(addMeetingsWeek(temp))
-        //     dispatch(currentMoment(startEnd))
-        //     dispatch(findMeeting(false))
-        //     dispatch(clearActiveMeetings())
-        // }
     }
-
-    const getActiveMeet = () => {
-        const index1 = hours.indexOf(meetingDate[3]);
-        const index2 = week.indexOf(meetingDate[2]);
+    const countSectorNumber = () => {
+        const firstWeekday = moment(readingDate).startOf('isoWeek');
+        const lastWeekday = moment(readingDate).endOf('isoWeek');
+        const newWeek = getWeek({firstWeekday, lastWeekday})
+        const index1 = hours.indexOf(meetingData[3]);
+        const index2 = newWeek.indexOf(meetingData[2]);
+        // setSectorNumber(times[index1][index2])
         dispatch(setActiveMeetings(times[index1][index2]))
     }
+    const checkWeekNumber = (str:string) => {
+        // const setMoment = str.slice(0, 10);
+        const firstWeekday = moment(str).startOf('isoWeek')
+        const enteredDate = getMonthYear({firstWeekday})
+        return currentWeek === enteredDate.currentWeek
+    }
 
-    useEffect(() => {
-        if (isMount.current) {
-            getActiveMeet();
+    const dropMeeting = () => {
+        if(checkWeekNumber(readingDate)){
+            dispatch(setActiveMeetings(sectorNumber))
+            // countSectorNumber();
+        }else {
+            console.log('NOT ===')
+            if (activeMeetings.length !== 0) {
+                dispatch(addMeetingsWeek(temp))
+                dispatch(clearActiveMeetings())
+            }
+            const startEnd = {
+                firstWeekday: moment(readingDate).startOf('isoWeek'),
+                lastWeekday: moment(readingDate).endOf('isoWeek'),
+            }
+            dispatch(currentMoment(startEnd))
+            dispatch(findMeeting(false))
+            countSectorNumber();
+            // dispatch(setActiveMeetings(sectorNumber))
+        }
+
+    }
+
+    useEffect(()=>{
+        if(isMount.current){
+            dropMeeting()
         }
         isMount.current = true
-    }, [meetingDate])
+    },[meetingData])
 
     return (
         <StyledHeader {...props}>
@@ -136,3 +153,5 @@ const Header = (props: propHeader) => {
 };
 
 export default Header;
+
+// Rethinking the logic of adding an event

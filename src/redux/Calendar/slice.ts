@@ -1,4 +1,6 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {uniq} from "lodash";
+
 
 export interface TMeetingsWeek {
     year: string,
@@ -31,6 +33,9 @@ const calendarSlice = createSlice({
 
         setActiveMeetings(state, action) {
             state.activeMeetings.push(action.payload)
+            // const uniq = new Set(state.activeMeetings)
+            // state.activeMeetings = Array.from(uniq)
+            state.activeMeetings = uniq(state.activeMeetings)
         },
 
         setCurrentMeeting(state, action) {
@@ -60,7 +65,11 @@ const calendarSlice = createSlice({
                     (item.weekNumber === action.payload.weekNumber))
             });
             if (findMeetWeek) {
-                state.activeMeetings = findMeetWeek.dataMeetings
+                if(action.payload.dataMeetings.length === 0){
+                    state.activeMeetings = findMeetWeek.dataMeetings
+                }else{
+                    state.activeMeetings = uniq([...action.payload.dataMeetings, ...findMeetWeek.dataMeetings])
+                }
             }
         },
     }

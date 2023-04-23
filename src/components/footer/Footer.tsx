@@ -12,7 +12,7 @@ import {
     TMeetingsWeek
 } from "../../redux/Calendar/slice";
 import {momentSelector} from "../../redux/Moment/selectors";
-import {currentMoment} from "../../redux/Moment/slice";
+import {currentMoment, presentMoment} from "../../redux/Moment/slice";
 import moment from "moment/moment";
 import {getMonthYear} from "../week/GetWeek";
 
@@ -49,12 +49,13 @@ const Footer = (props: FooterProps) => {
     }
     const onClickToday = () => {
 
-        const startEnd = {
-            firstWeekday: moment().startOf('isoWeek'),
-            lastWeekday: moment().endOf('isoWeek'),
-        }
+        // const startEnd = {
+        //     firstWeekday: moment().startOf('isoWeek'),
+        //     lastWeekday: moment().endOf('isoWeek'),
+        // }
+        // dispatch(currentMoment(startEnd))
         dispatch(addMeetingsWeek(temp))
-        dispatch(currentMoment(startEnd))
+        dispatch(presentMoment())
         dispatch(findMeeting(false))
         dispatch(clearActiveMeetings())
     }
