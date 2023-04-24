@@ -9,9 +9,12 @@ type TitleProps = {
 }
 
 const StyledTitle = styled.h1<PropsWithChildren>`
-   font-size: ${props => props.title || '2em'};
+   font-size: ${props => props.title || props.theme.fontSize.lg};
   text-align: center;
   color: ${props => props.color || 'black'};
+  @media ${props => props.theme.media.phone} {
+    font-size: ${props => props.theme.fontSize.md};
+  }
 `
 
 const Title = (props:TitleProps) => {

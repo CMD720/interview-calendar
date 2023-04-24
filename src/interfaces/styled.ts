@@ -1,42 +1,61 @@
-
-export enum ThemeEnum  {
-    light = "light",
-    dark = "dark"
-}
 export interface ITheme {
     colors: {
-        primary: string
-        secondary: string
-        success: string
-        danger: string
+        primary: string,
+        fontColor: string,
+        borderColor: string,
+        backgroundGrey: string,
+        backgroundWhite: string,
+        backgroundSector1: string,
+        backgroundSector2: string,
 
-        bg: string,
-        font: string,
-    }
-    display:{
+    },
+    background:{
+        backgroundGrey: string,
+        backgroundWhite: string,
+        backgroundSector1: string,
+        backgroundSector2: string,
+    },
+
+    size: {
+        sectorAreaWidth:{
+            xs: string,
+            sm: string,
+            md: string,
+            mdP: string,
+            lg: string,
+            xl: string,
+        },
+        sectorAreaHeight:{
+            xs: string,
+            sm: string,
+            md: string,
+            mdP: string,
+            lg: string,
+            xl: string,
+        }
+    },
+    fontSize: {
+        xs: string,
+        sm: string,
+        md: string,
+        mdP: string,
+        lg: string,
+    },
+    display: {
         none: string,
         block: string,
     }
+
+    blockSizes: {
+        header: { height: number },
+        container: { width: number },
+        footer: { height: number },
+        modal: { width: number },
+    }
+
     media: {
-        extraLarge: string
-        large: string
-        medium: string
-        small: string
+        phone: string,
+        tablet: string,
     }
 
-    sizes: {
-        header: { height: number }
-        container: { width: number }
-        footer: { height: number }
-        modal: { width: number }
-    }
-
-    durations: {
-        ms300: number
-    }
-
-    order: {
-        header: number
-        modal: number
-    },
 }

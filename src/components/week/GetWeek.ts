@@ -54,7 +54,9 @@ type getMonthYearprops = {
     firstWeekday: Moment
 }
 export const getMonthYear = ({firstWeekday}:getMonthYearprops) => {
-    const month = firstWeekday.format('MMMM')
+    const centerWeek = firstWeekday.clone()
+    const month = centerWeek.add(3,'day').format('MMMM')
+    // const month = firstWeekday.format('MMMM')
     const year = firstWeekday.format('YYYY')
     const today = Number(moment().format('DD'))
     const currentWeek = firstWeekday.week()

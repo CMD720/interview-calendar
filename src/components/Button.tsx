@@ -50,5 +50,9 @@ const StyledButton=styled.button<StyledButtonProps>`
     background : transparent;
     font-size: ${props => props.fontSize || '1.5em'};
     padding: 0;
+    
+    @media ${props => props.theme.media.phone} {
+      font-size: ${props.theme.fontSize.sm};
+    }
   `}
 `

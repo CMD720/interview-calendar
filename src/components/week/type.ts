@@ -7,6 +7,6 @@ export enum FontSize {
     lg = '2em',
 }
 export type SectorProps = {
-    fontSize?: FontSize;
-    children?: string | number | ReactElement; //Если убрать ошибки нет, всё работает. Почему?
+    fontSize?: string;
+    children?: string | number | ReactElement;
 }

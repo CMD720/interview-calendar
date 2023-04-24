@@ -18,13 +18,21 @@ import {getMonthYear} from "../week/GetWeek";
 
 
 const StyledFooter = styled.div`
-  background: #f6f6f6;
+  //background: #f6f6f6;
+  background: ${props => props.theme.background.backgroundGrey};
   padding: 20px 40px;
-  color: #ff3131;
-  border-top: solid 1px #ebebeb;
+  //color: #ff3131;
+  color: ${props => props.theme.colors.primary};
+  border-top: solid 1px ${props => props.theme.colors.borderColor};
+
+  @media ${props => props.theme.media.phone} {
+    padding: 20px 30px;
+  }
 `
 
-type FooterProps = {}
+type FooterProps = {
+
+}
 const Footer = (props: FooterProps) => {
     const dispatch = useAppDispatch()
     const {viewMeeting, currentMeeting} = useAppSelector(calendarSelector)
@@ -48,12 +56,6 @@ const Footer = (props: FooterProps) => {
         }
     }
     const onClickToday = () => {
-
-        // const startEnd = {
-        //     firstWeekday: moment().startOf('isoWeek'),
-        //     lastWeekday: moment().endOf('isoWeek'),
-        // }
-        // dispatch(currentMoment(startEnd))
         dispatch(addMeetingsWeek(temp))
         dispatch(presentMoment())
         dispatch(findMeeting(false))

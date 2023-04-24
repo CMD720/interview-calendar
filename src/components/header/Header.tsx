@@ -17,8 +17,6 @@ import {
 import {currentMoment} from "../../redux/Moment/slice";
 
 type propHeader = {
-    colorTitle?: string
-    fillSvg?: string
     background?: string
 }
 const StyledHeader = styled.div<propHeader>`
@@ -26,7 +24,10 @@ const StyledHeader = styled.div<propHeader>`
   align-items: center;
   justify-content: space-between;
   padding: 30px;
-  background: ${props => props.background || '#ffff'};
+  background: ${props => props.background || props.theme.background.backgroundWhite};
+  @media ${props => props.theme.media.phone} {
+    padding: 22px 25px;
+  }
 `
 
 
@@ -137,7 +138,7 @@ const Header = (props: propHeader) => {
 
     return (
         <StyledHeader {...props}>
-            <Title color={props.colorTitle}>
+            <Title>
                 Interview Calendar
             </Title>
             <svg style={{cursor: 'pointer'}} onClick={addMeeting} fill='#ff3131' width="30px" height="30px"

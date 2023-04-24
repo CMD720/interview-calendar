@@ -4,7 +4,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {ThemeProvider} from "styled-components";
 import {Global} from "./components/styles";
-import {theme , baseTheme} from "./components/theme";
+import {theme } from "./components/theme";
 import {setupStore} from "./redux/store";
 import {Provider} from "react-redux";
 

@@ -36,11 +36,16 @@ const StyledSector = styled.div<SectorProps>`
   justify-content: center;
   align-items: center;
   width: 100%;
-  font-size: ${props => props.fontSize || '1.8em'};
+  font-size: ${props => props.fontSize || props.theme.fontSize.mdP};
   font-weight: bolder;
   padding: 10px;
+  @media ${props => props.theme.media.phone} {
+    font-size: ${props => props.theme.fontSize.sm};
+    padding: 5px;
+  }
 `
 type StyledSectorAreaProps = {
+    colors? : string
     background?: string
 }
 //TODO StyledSectorArea расширить StyledSector
@@ -49,16 +54,22 @@ const StyledSectorArea = styled.div<StyledSectorAreaProps>`
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: ${props => props.background || '#f6f6f6'};
-  color: ${props => props.color || 'black'};
+  background: ${props => props.background || props.theme.background.backgroundGrey};
+  color: ${props => props.color || props.theme.colors.fontColors};
   border-radius: 50%;
+  
+  @media ${props => props.theme.media.phone} {
+    width: 30px;
+    height: 30px;
+  }
+  
 `
 const Block = styled.div`
   grid-area: block;
   width: auto;
   height: auto;
 `
-const Week = () => {
+const Week = (props:StyledSectorAreaProps) => {
     const dispatch = useDispatch()
     const {activeMeetings, meetingsWeek} = useAppSelector(calendarSelector)
 
@@ -138,7 +149,7 @@ const Week = () => {
     }, [currentWeek , firstWeekday]);
 
     return (
-        <StyledWeek>
+        <StyledWeek {...props}>
             <Block>
                 <Flex>
                     {daysWeek}

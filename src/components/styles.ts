@@ -18,6 +18,9 @@ export const Wrapper = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
+  @media ${props => props.theme.media.phone} {
+    padding: 5px;
+  }
 `
 
 export const CalendarBody = styled.section`

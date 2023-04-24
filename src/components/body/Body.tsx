@@ -1,11 +1,11 @@
 import React from 'react';
-import {MeetSector, MeetSectorArea, StyledBody, StyledMeet, StyledTime, TimeSector} from "./styles";
+import {MeetSector, MeetSectorArea, meetSectorProps, StyledBody, StyledMeet, StyledTime, TimeSector} from "./styles";
 import {useAppDispatch, useAppSelector} from "../../redux/storeHook";
 import {findMeeting, setActiveMeetings, setCurrentMeeting} from "../../redux/Calendar/slice";
 import {calendarSelector} from "../../redux/Calendar/selectors";
 
 
-const Body = () => {
+const Body = (props:meetSectorProps) => {
     const dispatch = useAppDispatch()
     const {activeMeetings, meetingsWeek, currentMeeting} = useAppSelector(calendarSelector)
 
@@ -45,12 +45,12 @@ const Body = () => {
                 onDoubleClick={() => onDblClickMeetSector(i)}
                 onClick={(event) => onClickMeetSector(i, event)}
                 background={activeMeetings.find((item) => item === i) ? '#ebecff' : 'white'}>
-                {i}
+                {/*{i}*/}
             </MeetSectorArea>
         </MeetSector>)
     }
     return (
-        <StyledBody>
+        <StyledBody {...props}>
             <StyledTime>
                 {timesMeeting}
             </StyledTime>
