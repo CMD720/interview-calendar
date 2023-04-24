@@ -4,16 +4,43 @@ type getWeekProps = {
     firstWeekday: any;
     lastWeekday: any;
 }
-export const getWeek = ({firstWeekday, lastWeekday}: getWeekProps) => {
-//TODO некорректно работает стык месяца на неделе первый день больше последнего
-//количество дней в месяце
-    const week = []
-    const firstWeekDay = firstWeekday.date();
-    const lastWeekDay = lastWeekday.date();
-    for (let i = firstWeekDay; i <= lastWeekDay; i++) {
-        week.push(i)
+// export const getWeek = ({firstWeekday, lastWeekday}: getWeekProps) => {
+// //TODO некорректно работает стык месяца на неделе первый день больше последнего
+//     const week = []
+//     const firstWeekDay = firstWeekday.date();
+//     const lastWeekDay = lastWeekday.date();
+//     for (let i = firstWeekDay; i <= lastWeekDay; i++) {
+//         week.push(i)
+//     }
+//     return week
+// }
+
+export const getWeek = ({firstWeekday, lastWeekday}:getWeekProps) => {
+    const firstWeekdayClone = firstWeekday.clone()
+    const lastWeekdayClone = lastWeekday.clone()
+    const firstWeekDay = firstWeekdayClone.date();
+    const lastWeekDay = lastWeekdayClone.date();
+
+    const firstWD = firstWeekdayClone.date();
+    const date = firstWeekdayClone.endOf('month');
+    const lastDate = date.date();
+    const firstMonthday = lastWeekdayClone.startOf('month').day();
+    // console.log('первый день недели -',firstWD,' дней в месяце -', lastDate,' первый день недели месяца - ', firstMonthday);
+
+    const weekDays = [];
+    if(firstWeekday.date() > lastWeekday.date()){
+        for (let i = firstWD; i <= lastDate; i++) {
+            weekDays.push(i)
+        }
+        for(let j = 1 ; j<=(8 - firstMonthday); j++){
+            weekDays.push(j)
+        }
+    }else{
+        for(let i = firstWeekDay; i<=lastWeekDay; i++){
+            weekDays.push(i)
+        }
     }
-    return week
+return weekDays
 }
 
 export const getWeekDays = () => {
@@ -31,8 +58,6 @@ export const getMonthYear = ({firstWeekday}:getMonthYearprops) => {
     const year = firstWeekday.format('YYYY')
     const today = Number(moment().format('DD'))
     const currentWeek = firstWeekday.week()
-    // const presentWeek = moment().locale('ru').week()
     const presentWeek = moment().isoWeek()
-    // console.log(presentWeek);
     return {month, year, today, currentWeek, presentWeek}
 }

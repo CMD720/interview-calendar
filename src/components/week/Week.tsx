@@ -52,12 +52,6 @@ const StyledSectorArea = styled.div<StyledSectorAreaProps>`
   background: ${props => props.background || '#f6f6f6'};
   color: ${props => props.color || 'black'};
   border-radius: 50%;
-  //cursor: pointer;
-
-  //&:hover {
-  //  background: #fd8a8a;
-  //  color: white;
-  //}
 `
 const Block = styled.div`
   grid-area: block;
@@ -77,9 +71,6 @@ const Week = () => {
 
     const days = getWeekDays()
     const {month, year, today, currentWeek, presentWeek} = getMonthYear({firstWeekday})
-
-    // console.log('firstWeekday',firstWeekday);
-    // console.log('lastWeekday',lastWeekday);
 
     const temp: TMeetingsWeek = {
         year: year,
@@ -126,10 +117,6 @@ const Week = () => {
         setWeek(getWeek({firstWeekday, lastWeekday}))
     }
 
-    // console.log('WEEK',week);
-    // console.log('today',today);
-    // console.log('presentWeek',presentWeek);
-    // console.log('currentWeek',currentWeek);
     const daysWeek = days.map((day, i) => <StyledSector key={i} fontSize={FontSize.sm}>{day}</StyledSector>)
     const dateWeek = week.map((date, i) => <StyledSector key={i}>
         <StyledSectorArea

@@ -97,11 +97,11 @@ const Header = (props: propHeader) => {
         const newWeek = getWeek({firstWeekday, lastWeekday})
         const index1 = hours.indexOf(meetingData[3]);
         const index2 = newWeek.indexOf(meetingData[2]);
-        // setSectorNumber(times[index1][index2])
         dispatch(setActiveMeetings(times[index1][index2]))
     }
+
+    //TODO можно вынести в отдельный файл
     const checkWeekNumber = (str:string) => {
-        // const setMoment = str.slice(0, 10);
         const firstWeekday = moment(str).startOf('isoWeek')
         const enteredDate = getMonthYear({firstWeekday})
         return currentWeek === enteredDate.currentWeek
@@ -124,7 +124,6 @@ const Header = (props: propHeader) => {
             dispatch(currentMoment(startEnd))
             dispatch(findMeeting(false))
             countSectorNumber();
-            // dispatch(setActiveMeetings(sectorNumber))
         }
 
     }
