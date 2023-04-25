@@ -41,7 +41,7 @@ export const theme: ITheme = {
     },
     fontSize:{
         xs : '0.5em',
-        sm : '1.2em',
+        sm : '1.3em',
         md : '1.5em',
         mdP : '1.8em',
         lg : '2em',

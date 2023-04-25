@@ -43,7 +43,6 @@ export const MeetSector = styled.div <meetSectorProps>`
   padding: 2px;
   border-bottom: 1px solid #e6e6e6;
   border-right: 1px solid #e6e6e6;
-  //color: {props => props.color || '#000000FF'};
   color: ${props => props.color || props.theme.colors.fontColor};
   height: 50px;
   width: ${100 / 7}%;

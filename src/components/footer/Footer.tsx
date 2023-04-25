@@ -12,21 +12,18 @@ import {
     TMeetingsWeek
 } from "../../redux/Calendar/slice";
 import {momentSelector} from "../../redux/Moment/selectors";
-import {currentMoment, presentMoment} from "../../redux/Moment/slice";
-import moment from "moment/moment";
+import {presentMoment} from "../../redux/Moment/slice";
 import {getMonthYear} from "../week/GetWeek";
 
 
 const StyledFooter = styled.div`
-  //background: #f6f6f6;
   background: ${props => props.theme.background.backgroundGrey};
   padding: 20px 40px;
-  //color: #ff3131;
   color: ${props => props.theme.colors.primary};
   border-top: solid 1px ${props => props.theme.colors.borderColor};
 
   @media ${props => props.theme.media.phone} {
-    padding: 20px 30px;
+    padding: 15px 30px;
   }
 `
 

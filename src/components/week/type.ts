@@ -10,3 +10,7 @@ export type SectorProps = {
     fontSize?: string;
     children?: string | number | ReactElement;
 }
+export type StyledSectorAreaProps = {
+    colors? : string
+    background?: string
+}

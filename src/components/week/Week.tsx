@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import styled from "styled-components";
 import {getMonthYear, getWeek, getWeekDays} from "./GetWeek";
-import {FontSize, SectorProps} from "./type";
+import {FontSize, SectorProps, StyledSectorAreaProps} from "./type";
 import Title from "../Title";
 import moment, {Moment} from "moment/moment";
 import Flex from "../Flex";
@@ -40,15 +40,11 @@ const StyledSector = styled.div<SectorProps>`
   font-weight: bolder;
   padding: 10px;
   @media ${props => props.theme.media.phone} {
-    font-size: ${props => props.theme.fontSize.sm};
+    font-size: ${props => props.fontSize || props.theme.fontSize.sm || "0.8em" };
     padding: 5px;
   }
 `
-type StyledSectorAreaProps = {
-    colors? : string
-    background?: string
-}
-//TODO StyledSectorArea расширить StyledSector
+
 const StyledSectorArea = styled.div<StyledSectorAreaProps>`
   display: flex;
   justify-content: center;
@@ -71,12 +67,9 @@ const Block = styled.div`
 `
 const Week = (props:StyledSectorAreaProps) => {
     const dispatch = useDispatch()
-    const {activeMeetings, meetingsWeek} = useAppSelector(calendarSelector)
+    const {activeMeetings} = useAppSelector(calendarSelector)
 
     const {firstWeekday, lastWeekday} = useAppSelector(momentSelector)
-    // const [firstWeekday, setFirstWeekday] = useState<Moment>(moment().startOf('isoWeek'))
-    // const [lastWeekday, setLastWeekday] = useState<Moment>(moment().endOf('isoWeek'))
-
     const [week, setWeek] = useState<number[]>([])
     const [isMount, setIsMount] = useState(true)
 
@@ -89,18 +82,14 @@ const Week = (props:StyledSectorAreaProps) => {
         weekNumber: currentWeek,
         dataMeetings: activeMeetings,
     }
-    // console.log('temp',temp);
 
     const onClickPreviousWeek = () => {
         if (activeMeetings.length !== 0) {
             dispatch(addMeetingsWeek(temp))
             dispatch(clearActiveMeetings())
         }
-        // setFirstWeekday(firstWeekday.startOf('isoWeek').subtract(1, 'week'))
-        // setLastWeekday(lastWeekday.endOf('isoWeek').subtract(1, 'week'))
 
-        //работает но! ошибка в кансоли : non-serializable value was detected in the state, in the path: `moment.firstWeekday`. Value: M
-        //пока не понятно...
+        //TODO ! ошибка в кансоли : non-serializable value was detected in the state, in the path: `moment.firstWeekday`. Value: M
         const startEnd = {
             firstWeekday:firstWeekday.startOf('isoWeek').subtract(1, 'week'),
             lastWeekday:lastWeekday.endOf('isoWeek').subtract(1, 'week'),
@@ -114,11 +103,8 @@ const Week = (props:StyledSectorAreaProps) => {
             dispatch(addMeetingsWeek(temp))
             dispatch(clearActiveMeetings())
         }
-        // setFirstWeekday(firstWeekday.startOf('isoWeek').add(1, 'week'))
-        // setLastWeekday(lastWeekday.endOf('isoWeek').add(1, 'week'))
 
-        //работает но! ошибка в консоли : non-serializable value was detected in the state, in the path: `moment.firstWeekday`. Value: M
-        //пока не понятно...
+        //TODO ! ошибка в консоли : non-serializable value was detected in the state, in the path: `moment.firstWeekday`. Value: M
         const startEnd = {
             firstWeekday:firstWeekday.startOf('isoWeek').add(1, 'week'),
             lastWeekday:lastWeekday.endOf('isoWeek').add(1, 'week'),

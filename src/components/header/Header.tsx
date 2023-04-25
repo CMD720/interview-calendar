@@ -2,7 +2,6 @@ import React, {useEffect, useRef, useState} from 'react';
 import Title from "../Title";
 import styled from "styled-components";
 import moment from "moment/moment";
-import {FontSize} from "../week/type";
 import {getMonthYear, getWeek, getWeekDays} from "../week/GetWeek";
 import {useAppDispatch, useAppSelector} from "../../redux/storeHook";
 import {momentSelector} from "../../redux/Moment/selectors";
@@ -43,9 +42,7 @@ const Header = (props: propHeader) => {
         weekNumber: currentWeek,
         dataMeetings: activeMeetings,
     }
-    // const [meetingDate, setMeetingDate] = useState<number[]>([])
     const week = getWeek({firstWeekday, lastWeekday})
-    // const [week, setWeek] = useState<number[]>(getWeek({firstWeekday, lastWeekday}))
     const isMount = useRef(false)
     const [sectorNumber, setSectorNumber] = useState<number>(0)
     const [readingDate, setReadingDate] = useState('')
